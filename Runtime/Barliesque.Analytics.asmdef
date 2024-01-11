@@ -1,0 +1,16 @@
+{
+    "name": "Barliesque.Analytics",
+    "rootNamespace": "",
+    "references": [
+        "Barliesque.Utils"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
