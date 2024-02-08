@@ -7,6 +7,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Serialization;
+using UnityEngine.SceneManagement;
 
 
 public class Analytics : MonoBehaviour
@@ -15,6 +16,7 @@ public class Analytics : MonoBehaviour
 	[SerializeField] private string _tableID;
 	[Tooltip("Move the root GameObject to DontDestroyOnLoad to persist scene loads?  Doing so ensures against uncompleted uploads.")]
 	[SerializeField] private bool _persistent = true;
+	[SerializeField] private bool _cancelOnSceneLoad = true;
 	
 	[Tooltip("File will be saved to My Documents folder, as determined by the operating system.")]
 	[SerializeField] private string _localFilename = "Analytics.txt";
@@ -49,6 +51,12 @@ public class Analytics : MonoBehaviour
 		var root = GetComponent<Transform>();
 		while (root.parent) root = root.parent;
 		if (_persistent) DontDestroyOnLoad(root.gameObject);
+		if (_cancelOnSceneLoad) SceneManager.sceneUnloaded += CancelGame;
+	}
+
+	private void CancelGame(Scene scene)
+	{
+		_gameInProgress = false;
 	}
 
 	private void OnDestroy()
