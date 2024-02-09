@@ -1,4 +1,6 @@
 using UnityEngine;
+using Barliesque.Analytics;
+
 
 public class AnalyticsTest : MonoBehaviour
 {
