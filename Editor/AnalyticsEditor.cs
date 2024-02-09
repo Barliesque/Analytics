@@ -38,30 +38,44 @@ public class AnalyticsEditor : EditorBase<Analytics>
 		PropertyField("_persistent");
 		PropertyField("_tableID");
 		EditorGUILayout.Space();
-		
-		EditorGUILayout.BeginHorizontal();
-		PropertyField("_localFilename");
-		if (GUILayout.Button("Open", GUILayout.Width(60f)))
+
+		var saveContext = (Analytics.Context)PropertyField("_saveToLocalFile").intValue;
+		if (saveContext != 0)
 		{
-			Application.OpenURL(inst.DataFilePath);
+			EditorGUILayout.BeginHorizontal();
+			PropertyField("_localFilename");
+			if (GUILayout.Button("Open", GUILayout.Width(60f)))
+			{
+				Application.OpenURL(inst.DataFilePath);
+			}
+
+			if (GUILayout.Button("Find", GUILayout.Width(60f)))
+			{
+				EditorUtility.RevealInFinder(inst.DataFilePath);
+			}
+
+			EditorGUILayout.EndHorizontal();
+			PropertyField("_separator", "Data Separator");
+			EditorGUILayout.Space();
 		}
-		if (GUILayout.Button("Find", GUILayout.Width(60f)))
+
+		var sendContext = (Analytics.Context)PropertyField("_sendToGoogle").intValue;
+		if (sendContext != 0)
 		{
-			EditorUtility.RevealInFinder(inst.DataFilePath);
+			PropertyField("_googleFormURL");
+			PropertyField("_retryDelay");
+			EditorGUILayout.Space();
 		}
-		EditorGUILayout.EndHorizontal();
-		PropertyField("_separator", "Data Separator");
-		EditorGUILayout.Space();
-		PropertyField("_googleFormURL");
-		PropertyField("_retryDelay");
-		EditorGUILayout.Space();
+
 		EditorGUILayout.Space();
 		
 		GUI.enabled = !Application.isPlaying;
 		_metrics.DoLayoutList();
 		GUI.enabled = true;
-		EditorGUILayout.Space();
 
+		if (saveContext == 0 && sendContext == 0) return;
+
+		EditorGUILayout.Space();
 		if (EditorTools.BeginFoldout("Help with formatting", ref _showFormatHelp))
 		{
 			EditorTools.HelpBox("Leaving the Format field empty uses a default format which works well in most cases.  " +
@@ -86,8 +100,9 @@ public class AnalyticsEditor : EditorBase<Analytics>
 			EditorGUILayout.EndHorizontal();
 		}
 		EditorTools.EndFoldout(_showFormatHelp);
-		
 
+		if (sendContext == 0) return;
+		
 		if (EditorTools.BeginFoldout("Help setting up Google Form", ref _showGoogleHelp))
 		{
 			EditorTools.HelpBox(@"- All data will be sent as strings, so use the type ""Short Answer"" for each of the form questions.

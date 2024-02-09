@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.Serialization;
 using UnityEngine.SceneManagement;
 
 
@@ -17,16 +16,24 @@ public class Analytics : MonoBehaviour
 	[Tooltip("Move the root GameObject to DontDestroyOnLoad to persist scene loads?  Doing so ensures against uncompleted uploads.")]
 	[SerializeField] private bool _persistent = true;
 	[SerializeField] private bool _cancelOnSceneLoad = true;
-	
+
+	[SerializeField] private Context _saveToLocalFile = Context.Editor;
 	[Tooltip("File will be saved to My Documents folder, as determined by the operating system.")]
 	[SerializeField] private string _localFilename = "Analytics.txt";
 	[SerializeField] private Separator _separator = Separator.Tab; 
 	
+	[SerializeField] private Context _sendToGoogle = Context.Runtime;
 	[SerializeField, TextArea] private string _googleFormURL;
 	[SerializeField] private float _retryDelay = 5f;
 	
-	[FormerlySerializedAs("_gameData"),SerializeField] private AnalyticsMetric[] _metrics;
-	
+	[SerializeField] private AnalyticsMetric[] _metrics;
+
+	[Flags]
+	public enum Context
+	{
+		Runtime = 1,
+		Editor = 2
+	}
 
 	static private List<Analytics> _instance;
 	
@@ -162,8 +169,10 @@ public class Analytics : MonoBehaviour
 			if (metric.type != AnalyticsMetric.ValueType._timeSpan) Debug.LogError($"[ANALYTICS]  Duration metric \"{duration}\" must have type Timespan.");
 			else metric.TimeSpanValue = DateTime.Now - _gameStartTime;
 		}
-		WriteToDataFile();
-		SendDataToOnlineForm();
+
+		var context = Application.isEditor ? Context.Editor : Context.Runtime;
+		if ((_saveToLocalFile & context) != 0) WriteToDataFile();
+		if ((_sendToGoogle & context) != 0) SendDataToOnlineForm();
 	}
 	
 
