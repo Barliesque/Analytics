@@ -1,15 +1,13 @@
 using Barliesque.InspectorTools.Editor;
+using Barliesque.Utils;
 using UnityEditor;
 using UnityEngine;
 
 namespace Barliesque.Analytics.Editor
 {
-
-
 	[CustomEditor(typeof(Analytics))]
 	public class AnalyticsEditor : EditorBase<Analytics>
 	{
-
 		private ListEditor _metrics;
 		private bool _showGoogleHelp;
 		private bool _showFormatHelp;
@@ -42,7 +40,7 @@ namespace Barliesque.Analytics.Editor
 			PropertyField("_tableID");
 			EditorGUILayout.Space();
 
-			var saveContext = (Analytics.Context)PropertyField("_saveToLocalFile").intValue;
+			var saveContext = ContextSelect("_saveToLocalFile");
 			if (saveContext != 0)
 			{
 				EditorGUILayout.BeginHorizontal();
@@ -62,7 +60,7 @@ namespace Barliesque.Analytics.Editor
 				EditorGUILayout.Space();
 			}
 
-			var sendContext = (Analytics.Context)PropertyField("_sendToGoogle").intValue;
+			var sendContext = ContextSelect("_sendToGoogle");
 			if (sendContext != 0)
 			{
 				PropertyField("_googleFormURL");
@@ -134,8 +132,25 @@ namespace Barliesque.Analytics.Editor
 			}
 
 			EditorTools.EndFoldout(_showGoogleHelp);
+		}
 
-
+		private int ContextSelect(string field)
+		{
+			var prop = GetProperty(field);
+			var inEditor = (prop.intValue & (int)Analytics.Context.Editor) > 0;
+			var atRuntime = (prop.intValue & (int)Analytics.Context.Runtime) > 0;
+			EditorGUI.BeginChangeCheck();
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.PrefixLabel(field[1..].SplitCamelCase().ToTitleCase());
+			EditorGUILayout.LabelField("Editor", GUILayout.Width(40f));
+			inEditor = EditorGUILayout.Toggle(inEditor, GUILayout.Width(20f));
+			EditorGUILayout.Space(10f, false);
+			EditorGUILayout.LabelField("Runtime", GUILayout.Width(60f));
+			atRuntime = EditorGUILayout.Toggle(atRuntime, GUILayout.Width(20f));
+			EditorGUILayout.EndHorizontal();
+			if (!EditorGUI.EndChangeCheck()) return prop.intValue;
+			prop.intValue = (inEditor ? (int)Analytics.Context.Editor : 0) | (atRuntime ? (int)Analytics.Context.Runtime : 0);
+			return prop.intValue;
 		}
 	}
 }
