@@ -381,13 +381,19 @@ namespace Barliesque.Analytics
 
 		private IEnumerator SubmitGameData()
 		{
+			#if UNITY_EDITOR
+			var data = new StringBuilder();
+			#endif
 			UnityWebRequest www = null;
+			var form = new WWWForm();
 			try
 			{
-				var form = new WWWForm();
 				foreach (var metric in _metrics)
 				{
 					form.AddField(metric.formID, metric.ToString());
+#if UNITY_EDITOR
+					data.Append($"{metric.name} = {metric.ToString()}\n");
+#endif
 				}
 
 				www = UnityWebRequest.Post(new Uri(_googleFormURL), form);
@@ -404,7 +410,11 @@ namespace Barliesque.Analytics
 				if (www.result == UnityWebRequest.Result.Success)
 				{
 					_sending = null;
+#if UNITY_EDITOR
+					Debug.Log($"[ANALYTICS]  Game data sent!\n{data.ToString()}");
+#else
 					Debug.Log($"[ANALYTICS]  Game data sent!");
+#endif
 				}
 				else
 				{

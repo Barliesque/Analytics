@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Barliesque.InspectorTools.Editor",
-        "Barliesque.Analytics"
+        "Barliesque.Analytics",
+        "Barliesque.Utils"
     ],
     "includePlatforms": [
         "Editor"
