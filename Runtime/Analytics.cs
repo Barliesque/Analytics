@@ -75,7 +75,7 @@ namespace Barliesque.Analytics
 
 		private void OnDestroy()
 		{
-			_instance.Remove(this);
+			_instance?.Remove(this);
 		}
 
 
