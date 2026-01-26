@@ -109,7 +109,8 @@ namespace Barliesque.Analytics.Editor
 			if (EditorTools.BeginFoldout("Help setting up Google Form", ref _showGoogleHelp))
 			{
 				EditorTools.HelpBox(@"- All data will be sent as strings, so use the type ""Short Answer"" for each of the form questions.
-- When completed, click the link icon to open a responder web page, and view the page source html
+- When completed, click the link icon and ""Copy responder link"" 
+    - Open a new tab with the copied URL, and view the page source html
     - Search for ""<form action="" to locate the submission URL.
     - Copy and paste that into the Google Form URL field above.
 - Click the three-dots menu button and ""Pre-fill form""
