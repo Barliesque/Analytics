@@ -1,0 +1,13 @@
+{
+  "name": "com.barliesque.analytics",
+  "displayName": "Analytics",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "A simple system of analytics data collection that can be written to a local file, or pushed online to a Google Form.",
+  "keywords": ["unity", "package", "analytics", "data", "google"],
+  "author": {
+    "name": "David Barlia",
+    "email": "barliesque@gmail.com"
+  },
+  "license": "MIT"
+}
