@@ -3,8 +3,8 @@
   "displayName": "Analytics",
   "version": "1.0.0",
   "unity": "2021.3",
-  "description": "A simple system of analytics data collection that can be written to a local file, or pushed online to a Google Form.",
-  "keywords": ["unity", "package", "analytics", "data", "google"],
+  "description": "Barliesque.Analytics leverages Google Forms and Spreadsheets to offer a simple system for collecting and collating analytics data from Unity.  For testing and offline use, data can be written to a local file in a variety of value-separated formats.",
+  "keywords": ["unity", "package", "analytics", "data", "google", "spreadsheet"],
   "author": {
     "name": "David Barlia",
     "email": "barliesque@gmail.com"
